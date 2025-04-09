@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="d-flex align-items justify-content-center">
+        <div class="w-75">
+            <h1 align="center">Авторизация</h1>
+            <form action="/signin" method="post" novalidate>
+                <div>
+                    {{ form.hidden_tag() }}
+                </div>
+                <div class="mb-3">
+                    {{ form.email.label() }}
+                    {{ form.email(class="form-control") }}
+                    {% for error in form.email.errors %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="mb-3">
+                    {{ form.password.label() }}
+                    {{ form.password(class="form-control") }}
+                    {% for error in form.password.errors %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="mb-3">
+                    {{ form.submit(class="btn btn-primary") }}
+                </div>
+                <div class="mb-3">
+                    {% if message %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endif %}
+                </div>
+                <p>Нет аккаунта? <a href="/signup">Зарегистрироваться</a></p>
+                <p>Забыли пароль? <a href="/signup" class="text-danger">Восстановить</a></p>
+            </form>
+        </div>
+    </div>
+{% endblock %}

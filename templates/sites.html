@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block content %}
+        <style>
+            .site-icon {
+                width: 80px;
+                height: 80px;
+                background: none;
+                margin-right: 20px;
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                border-radius: 50px;
+            }
+        </style>
+        <h1>Отслеживаемые сайты</h1>
+        <div class="mb-3">
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addSiteModal">Добавить сайт</button>
+            <br />
+            {% if message %}
+                <p class="alert alert-primary mt-2" role="alert">
+                    {{ message }}
+                </p>
+            {% endif %}
+        </div>
+        <ul class="list-group">
+            {% for site in current_user.sites %}
+                <li class="list-group-item container-fluid">
+                    <div class="row d-flex align-items-center">
+                        <div class="col-lg-10 d-flex">
+                            <div class="site-icon" style="background-image: url(http://localhost:3000/api/site_icon/{{ site.id }})"></div>
+                            <div>
+                                <h4>{{ site.name }}</h4>
+                                <p style="width: 100%">{{ site.url }}</p>   
+                            </div>
+                        </div>
+                        <div class="col-lg-2 d-flex align-items-center justify-content-end">
+                            <a href="/#"><button onClick="setInputsValues({{site.id}}, '{{site.name}}', '{{site.url}}')" class="btn btn-warning mx-1" data-bs-toggle="modal" data-bs-target="#editSiteModal">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                                    <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
+                                </svg>
+                            </button></a>
+                            <a href="/removeSite/{{ site.id }}"><button class="btn btn-danger">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                                    <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                                </svg>
+                            </button></a>
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="modal fade" tabindex="-1" id="addSiteModal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Добавление сайта для отслеживания</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <form action="/" method="post" enctype="multipart/form-data">
+                {{
+                    form.hidden_tag()
+                }}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        {{ form.name.label() }}
+                        {{ form.name(class="form-control") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.url.label() }}
+                        {{ form.url(class="form-control") }}
+                    </div>
+                    {{ form.icon.label() }}
+                    {{ form.icon(class="form-control", accept="image/*") }}
+                </div>
+                <div class="modal-footer">
+                    {{ form.submit(class="btn btn-primary") }}
+                </div>
+            </form>
+          </div>
+        </div>
+    </div>
+    <div class="modal fade" tabindex="-1" id="editSiteModal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Изменение сайта</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <form action="" id="editForm" method="post" enctype="multipart/form-data">
+                {{
+                    form.hidden_tag()
+                }}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        {{ form.name.label() }}
+                        {{ form.name(class="form-control", id="nameInput") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.url.label() }}
+                        {{ form.url(class="form-control", id="urlInput") }}
+                    </div>
+                    {{ form.icon.label() }}
+                    {{ form.icon(class="form-control", accept="image/*") }}
+                </div>
+                <div class="modal-footer">
+                    {{ form.submit(class="btn btn-primary", id="urlInput", value="Изменить") }}
+                </div>
+            </form>
+          </div>
+        </div>
+    </div>
+    <script>
+        function setInputsValues (id, name, url) {
+            console.log(1)
+            document.getElementById('editForm').setAttribute('action', `/editSite/${id}`)
+            document.getElementById('nameInput').setAttribute('value', name)
+            document.getElementById('urlInput').setAttribute('value', url)
+        }
+    </script>
+{% endblock %}
