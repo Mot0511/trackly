@@ -15,6 +15,7 @@ import os
 from scheduler import scheduler
 from api import api_router
 import time
+from sys import platform
 
 app = Flask(__name__)
 app.register_blueprint(api_router)
@@ -22,7 +23,11 @@ app.register_blueprint(api_router)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-global_init('/home/Mot0511/trackly/db/db.db')
+if platform == 'linux' or platform == 'linux2':
+    global_init('/home/Mot0511/trackly/db/db.db')
+else:
+    global_init('db/db.db')
+    
 load_processes(scheduler)
 
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -151,8 +156,7 @@ def logout():
 
 
 def main():
-    pass
-    # app.run(port=3000)
+    app.run(port=3000)
 
 if __name__ == '__main__':
     main()
