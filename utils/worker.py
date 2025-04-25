@@ -7,7 +7,7 @@ snapshots = {}
 
 def worker(site):
     try:
-        data = requests.get(site.url)
+        data = requests.get(site.url, headers={'Referer': site.url})
         
         if site.id in snapshots and not data.text == snapshots[site.id]:
             print('Отправка сообщения')
