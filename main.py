@@ -23,10 +23,7 @@ app.register_blueprint(api_router)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-if platform == 'linux' or platform == 'linux2':
-    global_init('/home/Mot0511/trackly/db/db.db')
-else:
-    global_init('db/db.db')
+global_init('db/db.db')
     
 load_processes(scheduler)
 
