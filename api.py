@@ -76,6 +76,9 @@ def edit_site(id):
     site.url = data['url']
     session.commit()
 
+    scheduler.remove_job(site.id)
+    scheduler.add_job(lambda: worker(site), 'interval', seconds=5, id=str(site.id))
+
     return jsonify({
         'message': 'OK'
     })
